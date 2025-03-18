@@ -22,6 +22,10 @@ from base.func_xinghuo_web import XinghuoWeb
 from configuration import Config
 from constants import ChatType
 from job_mgmt import Job
+from flask import Flask, request, jsonify
+import threading
+
+app = Flask(__name__)
 
 __version__ = "39.2.4.0"
 
@@ -291,3 +295,27 @@ class Robot(Job):
         report = Weather(self.config.CITY_CODE).get_weather()
         for r in receivers:
             self.sendTextMsg(report, r)
+
+    def startHttpServer(self) -> None:
+        # 启动 HTTP 服务线程
+        thread = threading.Thread(target=start_http_server, args=(self,))
+        thread.daemon = True
+        thread.start()
+
+def start_http_server(robot):
+    @app.route('/send_message', methods=['POST'])
+    def send_message():
+        data = request.json
+        user_id = data.get('user_id')
+        message = data.get('message')
+
+        if not user_id or not message:
+            return jsonify({'error': 'Invalid input'}), 400
+
+        try:
+            robot.sendTextMsg(message, user_id)
+            return jsonify({'status': 'Message sent'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    app.run(host='0.0.0.0', port=7123)

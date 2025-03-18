@@ -39,9 +39,11 @@ def main(chat_type: int):
     # 每天 16:30 提醒发日报周报月报
     robot.onEveryTime("16:30", ReportReminder.remind, robot=robot)
 
+    # 启动 HTTP 服务线程
+    robot.startHttpServer()
+
     # 让机器人一直跑
     robot.keepRunningAndBlockProcess()
-
 
 if __name__ == "__main__":
     parser = ArgumentParser()
