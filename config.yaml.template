@@ -68,6 +68,7 @@ chatgpt:  # -----chatgpt配置这行不填-----
   api: https://api.openai.com/v1  # 如果你不知道这是干嘛的，就不要改
   model: gpt-3.5-turbo
   proxy:  # 如果你在国内，你可能需要魔法，大概长这样：http://域名或者IP地址:端口号
+  timeout: 300  # 超时时间秒数，300是5分钟，超时时间太小会导致gpt还未做出回答就504超时
   prompt: 你是智能聊天机器人，你叫 wcferry  # 根据需要对角色进行设定
 
 chatglm:  # -----chatglm配置这行不填-----

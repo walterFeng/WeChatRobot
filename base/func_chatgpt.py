@@ -14,12 +14,18 @@ class ChatGPT():
         api = conf.get("api")
         proxy = conf.get("proxy")
         prompt = conf.get("prompt")
+        timeout = conf.get("timeout", 600)  # 默认10 分钟超时
         self.model = conf.get("model", "gpt-3.5-turbo")
         self.LOG = logging.getLogger("ChatGPT")
+        http_client_args = {'timeout': int(timeout)}
         if proxy:
-            self.client = OpenAI(api_key=key, base_url=api, http_client=httpx.Client(proxy=proxy))
-        else:
-            self.client = OpenAI(api_key=key, base_url=api)
+            http_client_args['proxy'] = proxy
+
+        self.client = OpenAI(
+            api_key=key,
+            base_url=api,
+            http_client=httpx.Client(**http_client_args)  # 应用超时和代理配置
+        )
         self.conversation_list = {}
         self.system_content_msg = {"role": "system", "content": prompt}
 
@@ -88,6 +94,7 @@ class ChatGPT():
 
 if __name__ == "__main__":
     from configuration import Config
+
     config = Config().CHATGPT
     if not config:
         exit(0)
