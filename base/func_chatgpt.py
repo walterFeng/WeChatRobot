@@ -14,10 +14,10 @@ class ChatGPT():
         api = conf.get("api")
         proxy = conf.get("proxy")
         prompt = conf.get("prompt")
-        timeout = conf.get("timeout", 600)  # 默认10 分钟超时
+        self.timeout = conf.get("timeout", 600)  # 默认10 分钟超时
         self.model = conf.get("model", "gpt-3.5-turbo")
         self.LOG = logging.getLogger("ChatGPT")
-        http_client_args = {'timeout': int(timeout)}
+        http_client_args = {'timeout': int(self.timeout)}
         if proxy:
             http_client_args['proxy'] = proxy
 
@@ -46,7 +46,8 @@ class ChatGPT():
         try:
             ret = self.client.chat.completions.create(model=self.model,
                                                       messages=self.conversation_list[wxid],
-                                                      temperature=0.2)
+                                                      temperature=0.2,
+                                                      timeout=int(self.timeout))
             rsp = ret.choices[0].message.content
             rsp = rsp[2:] if rsp.startswith("\n\n") else rsp
             rsp = rsp.replace("\n\n", "\n")
