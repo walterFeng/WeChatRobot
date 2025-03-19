@@ -304,7 +304,7 @@ class Robot(Job):
 
 def start_http_server(robot):
     @app.route('/send_txt_msg', methods=['POST'])
-    def send_message():
+    def send_txt_msg():
         data = request.json
         user_id = data.get('user_id')
         message = data.get('message')
@@ -319,7 +319,7 @@ def start_http_server(robot):
             return jsonify({'error': str(e)}), 500
 
     @app.route('/get_all_contacts', methods=['POST'])
-    def send_message():
+    def get_all_contacts():
         try:
             all_contacts = robot.getAllContacts()
             return jsonify(all_contacts)
