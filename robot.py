@@ -303,7 +303,7 @@ class Robot(Job):
         thread.start()
 
 def start_http_server(robot):
-    @app.route('/send_message', methods=['POST'])
+    @app.route('/send_txt_msg', methods=['POST'])
     def send_message():
         data = request.json
         user_id = data.get('user_id')
@@ -315,6 +315,14 @@ def start_http_server(robot):
         try:
             robot.sendTextMsg(message, user_id)
             return jsonify({'status': 'Message sent'})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @app.route('/get_all_contacts', methods=['POST'])
+    def send_message():
+        try:
+            all_contacts = robot.getAllContacts()
+            return jsonify(all_contacts)
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
