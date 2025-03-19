@@ -17,8 +17,9 @@ class ChatGPT():
         timeout_second = conf.get("timeout", 600)  # 默认10 分钟超时
         self.model = conf.get("model", "gpt-3.5-turbo")
         self.LOG = logging.getLogger("ChatGPT")
-        self.timeout = httpx.Timeout(float(timeout_second), read=10.0, write=15.0, connect=5.0)
+        self.timeout = httpx.Timeout(float(timeout_second), read=30.0, write=20.0, connect=10.0)
         http_client_args = {'timeout': self.timeout, 'verify': False}
+        print(f"timeout: {float(timeout_second)}")
         if proxy:
             http_client_args['proxy'] = proxy
 
