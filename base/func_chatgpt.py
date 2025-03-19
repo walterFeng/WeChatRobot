@@ -14,17 +14,19 @@ class ChatGPT():
         api = conf.get("api")
         proxy = conf.get("proxy")
         prompt = conf.get("prompt")
-        self.timeout = conf.get("timeout", 600)  # 默认10 分钟超时
+        timeout_second = conf.get("timeout", 600)  # 默认10 分钟超时
         self.model = conf.get("model", "gpt-3.5-turbo")
         self.LOG = logging.getLogger("ChatGPT")
-        http_client_args = {'timeout': int(self.timeout)}
+        self.timeout = httpx.Timeout(float(timeout_second), read=10.0, write=15.0, connect=5.0)
+        http_client_args = {'timeout': self.timeout, 'verify': False}
         if proxy:
             http_client_args['proxy'] = proxy
 
         self.client = OpenAI(
             api_key=key,
             base_url=api,
-            http_client=httpx.Client(**http_client_args)  # 应用超时和代理配置
+            http_client=httpx.Client(**http_client_args),  # 应用超时和代理配置
+            timeout=self.timeout
         )
         self.conversation_list = {}
         self.system_content_msg = {"role": "system", "content": prompt}
@@ -47,7 +49,7 @@ class ChatGPT():
             ret = self.client.chat.completions.create(model=self.model,
                                                       messages=self.conversation_list[wxid],
                                                       temperature=0.2,
-                                                      timeout=int(self.timeout))
+                                                      timeout=self.timeout)
             rsp = ret.choices[0].message.content
             rsp = rsp[2:] if rsp.startswith("\n\n") else rsp
             rsp = rsp.replace("\n\n", "\n")
