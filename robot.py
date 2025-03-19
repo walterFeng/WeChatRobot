@@ -314,11 +314,11 @@ def start_http_server(robot):
 
         try:
             robot.sendTextMsg(message, user_id)
-            return jsonify({'status': 'Message sent'})
+            return jsonify({'status': 'success'})
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
-    @app.route('/get_all_contacts', methods=['POST'])
+    @app.route('/get_all_contacts', methods=['GET'])
     def get_all_contacts():
         try:
             all_contacts = robot.getAllContacts()
