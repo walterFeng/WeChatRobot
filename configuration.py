@@ -4,6 +4,7 @@
 import logging.config
 import os
 import shutil
+from typing import Dict, List
 
 import yaml
 
@@ -30,6 +31,7 @@ class Config(object):
         self.CITY_CODE = yconfig["weather"]["city_code"]
         self.WEATHER = yconfig["weather"]["receivers"]
         self.GROUPS = yconfig["groups"]["enable"]
+        self.WELCOME_MSG = yconfig["groups"].get("welcome_msg", "欢迎 {new_member} 加入群聊！")
         self.NEWS = yconfig["news"]["receivers"]
         self.REPORT_REMINDERS = yconfig["report_reminder"]["receivers"]
 
@@ -40,5 +42,9 @@ class Config(object):
         self.CHATGLM = yconfig.get("chatglm", {})
         self.BardAssistant = yconfig.get("bard", {})
         self.ZhiPu = yconfig.get("zhipu", {})
-
+        self.DEEPSEEK = yconfig.get("deepseek", {})
+        self.PERPLEXITY = yconfig.get("perplexity", {})
+        self.COGVIEW = yconfig.get("cogview", {})
+        self.ALIYUN_IMAGE = yconfig.get("aliyun_image", {})
+        self.GEMINI_IMAGE = yconfig.get("gemini_image", {})
         self.SEND_RATE_LIMIT = yconfig.get("send_rate_limit", 0)

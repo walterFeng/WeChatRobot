@@ -13,7 +13,9 @@ pillow
 jupyter_client
 zhdate
 ipykernel
-google-generativeai
-zhipuai
+google-generativeai>=0.3.0
+zhipuai>=1.0.0
 ollama
 flask
+dashscope
+google-genai
